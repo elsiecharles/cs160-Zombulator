@@ -1,5 +1,6 @@
 //Zombulator by Elsie Charles
 
+
 var backgroundColor;
 
 const MIN_SIZE = 5;
@@ -22,6 +23,7 @@ function draw() {
   noStroke();
   drawZombies();
   drawHumans();
+  moveHumans();
 }
 
 
@@ -45,12 +47,11 @@ function initializeZombie(index) {
 
 function drawZombies() {
   for (var i = 0; i < NUMBER_OF_ZOMBIES; ++i) {
-    drawZombie(i);
+    drawZombie(zombies[i]);
   }
 }
 
-function drawZombie(index) {
-  var zombie = zombies[index];
+function drawZombie(zombie) {
   fill(zombie.color);
   ellipse(zombie.x, zombie.y, zombie.size, zombie.size);
 }
@@ -61,28 +62,42 @@ function drawZombie(index) {
 function initializeHumans() {
   humans = [];
   for (var i = 0; i < NUMBER_OF_HUMANS; ++i) {
-    initializeHuman(i)
+    initializeHuman(i);
   }
 }
-
 
 function initializeHuman(index) {
   humans[index] = {
     x: random(0, windowWidth),
     y: random(windowHeight - 200, windowHeight),
-    size:random(MIN_SIZE, MAX_SIZE),
-    color:color(random(50, 150), random(50, 150), random(150, 255), 150)
+    speed: random(0.05, 1),
+    size: random(MIN_SIZE, MAX_SIZE),
+    color: color(random(50, 150), random(50, 150), random(150, 255), 150)
   };
 }
 
 function drawHumans() {
   for (var i = 0; i < NUMBER_OF_HUMANS; ++i) {
-    drawHuman(i);
+    drawHuman(humans[i]); // TODO - revised
   }
 }
 
-function drawHuman(index) {
-  var human = humans[index];
+function drawHuman(human) { // TODO - revised
   fill(human.color);
   ellipse(human.x, human.y, human.size, human.size);
+  moveHuman (human);
+}
+
+function moveHumans() {
+  // bllllllaaaarrrgggghhh!
+  // Hint: loop
+  for (var i = 0; i < NUMBER_OF_HUMANS; ++i) {
+    moveHuman(humans[i]);
+  }
+}
+
+function moveHuman(human) {
+  // wlllllaaaaaauuuugggghhhhh!
+  human.y -= human.speed;
+  human.x += random (-2, 2);
 }
