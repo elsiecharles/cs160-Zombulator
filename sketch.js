@@ -1,4 +1,5 @@
 //Zombulator by Elsie Charles
+//CS160 
 
 
 var backgroundColor;
@@ -99,5 +100,5 @@ function moveHumans() {
 function moveHuman(human) {
   // wlllllaaaaaauuuugggghhhhh!
   human.y -= human.speed;
-  human.x += random (-2, 2);
+  human.x += random (-2, 3);
 }
