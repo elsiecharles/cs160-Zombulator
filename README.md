@@ -1,1 +1,3 @@
-newZombulator
+Zombie Outbreak Simulation
+
+by Elsie Charles
