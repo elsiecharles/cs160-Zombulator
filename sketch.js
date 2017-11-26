@@ -24,7 +24,7 @@ function draw() {
   drawPopulation();
   movePopulation();
   drawPopulationCounts();
-  handleCollisions ();
+  handleCollisions();
 }
 
 function handleCollisions() {
@@ -32,11 +32,37 @@ function handleCollisions() {
     var attacker = population[i];
     for (var j = i + 1; j < POPULATION_SIZE; ++j) {
       var target = population[j];
-
+      
       if (attacker.isTouching(target)) {
-        print ("Fight");
+        if (attacker.size != 0 && target.size != 0) {
+          print ("Fight");
+          fight(attacker, target);
+        }
       }
     }
+  }
+}
+
+function fight (attacker, target) {
+  if (target.size < attacker.size) {
+    target.size = 0;
+    if (target.humanoidType == "zombie") {
+      zombieCount --;
+    } else {
+      humanCount --;
+    }
+  } else if (target.size > attacker.size){
+    attacker.size = 0;
+    if (target.humanoidType == "zombie") {
+      zombieCount --;
+    } else {
+      humanCount --;
+    }
+  } else if (target.size == attacker.size) {
+    target.size = 0;
+    attacker.size = 0;
+    zombieCount --;
+    humanCount --;
   }
 }
 
@@ -76,9 +102,9 @@ function movePopulation() {
 function initializeZombie() {
   return {
     humanoidType: "zombie", 
-    x: random(0, windowWidth),
+    x: random (0. windowWidth),
     y: random(0, 200),
-    speed: random(0.25, 3),
+    speed: random(2, 5),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(100, 255), random(50, 150), random(50, 150), 150),
     move: function() {
@@ -110,7 +136,7 @@ function initializeHuman() {
     humanoidType: "human",
     x: random(0, windowWidth),
     y: random(windowHeight - 200, windowHeight),
-    speed: random(0.25, 3),
+    speed: random(2, 5),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(50, 150), random(50, 150), random(150, 255), 150),
     move: function() {
