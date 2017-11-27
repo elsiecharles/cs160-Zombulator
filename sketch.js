@@ -1,5 +1,6 @@
 // Zombulator by Elsie Charles
 //CS160 
+// A zombie outbreak simuulation
 
 var backgroundColor;
 
