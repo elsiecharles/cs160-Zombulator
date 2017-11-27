@@ -1,11 +1,11 @@
-//Zombulator by Elsie Charles
+// Zombulator by Elsie Charles
 //CS160 
 
 var backgroundColor;
 
 const MIN_SIZE = 5;
 const MAX_SIZE = 50;
-const POPULATION_SIZE = 500;
+const POPULATION_SIZE = 20;
 
 var population = [];
 
@@ -14,55 +14,68 @@ var humanCount = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  backgroundColor = color(245, 255, 245);
+  backgroundColor = color(252, 249, 189);
   initializePopulation();
 }
 
 function draw() {
   background(backgroundColor);
   noStroke();
-  drawPopulation();
-  movePopulation();
-  drawPopulationCounts();
-  handleCollisions();
+  if (humanCount > 0) {       
+    drawPopulation();
+    movePopulation();
+    drawPopulationCounts();
+    handleCollisions();
+  } else {
+    text("All humans dead", width / 2, height - 100);
+  }
 }
 
 function handleCollisions() {
+  var fightIndex = []
   for(var i = 0; i < POPULATION_SIZE; ++i) {
     var attacker = population[i];
+    fightIndex[0] = i
     for (var j = i + 1; j < POPULATION_SIZE; ++j) {
       var target = population[j];
+      fightIndex[1] = j
       
       if (attacker.isTouching(target)) {
-        if (attacker.size != 0 && target.size != 0) {
-          print ("Fight");
-          fight(attacker, target);
-        }
+        fight(attacker, target, fightIndex);
       }
     }
   }
 }
 
-function fight (attacker, target) {
-  if (target.size < attacker.size) {
-    target.size = 0;
-    if (target.humanoidType == "zombie") {
-      zombieCount --;
-    } else {
+function fight (attacker, target, fightIndex) {
+  if (attacker.isTouching(target)) {
+    if (target.size <= attacker.size) {
+      if (target.humanoidType == "human") {
+      print ("Zombie Won");
+      zombie = initializeZombie();
+      target = zombie;
       humanCount --;
-    }
-  } else if (target.size > attacker.size){
-    attacker.size = 0;
-    if (target.humanoidType == "zombie") {
-      zombieCount --;
+      zombieCount ++;
     } else {
-      humanCount --;
+      print ("Human Won");
+      population.splice(fightIndex[1], 1);
     }
-  } else if (target.size == attacker.size) {
-    target.size = 0;
-    attacker.size = 0;
-    zombieCount --;
-    humanCount --;
+  }
+}
+  else if (attacker.isTouching(target)) {
+    if (target.size > attacker.size) {
+      if (target.humanoidType == "human") {
+        print("Human Won");
+        population.splice(fightIndex[0], 1);
+      } else {
+        print ("Zombie Won");
+        zombie = initializeZombie();
+        target = zombie;
+        humanCount --;
+        zombieCount ++;
+        //humans can be defeated by larger zombies; ERROR!! zombies cannot be defeated by humans
+      }
+    }
   }
 }
 
@@ -81,7 +94,7 @@ function initializePopulation() {
 
 function drawPopulationCounts() {
   stroke(0);
-  textSize(72);
+  textSize(60);
   textAlign(CENTER);
   text("Zombies: " + zombieCount, width / 2, 100);
   text("Humans: " + humanCount, width / 2, height - 100);
@@ -102,9 +115,9 @@ function movePopulation() {
 function initializeZombie() {
   return {
     humanoidType: "zombie", 
-    x: random (0. windowWidth),
+    x: random (0, windowWidth),
     y: random(0, 200),
-    speed: random(2, 5),
+    speed: random(1, 4),
     size: random(MIN_SIZE, MAX_SIZE),
     color: color(random(100, 255), random(50, 150), random(50, 150), 150),
     move: function() {
@@ -136,9 +149,9 @@ function initializeHuman() {
     humanoidType: "human",
     x: random(0, windowWidth),
     y: random(windowHeight - 200, windowHeight),
-    speed: random(2, 5),
+    speed: random(1, 4),
     size: random(MIN_SIZE, MAX_SIZE),
-    color: color(random(50, 150), random(50, 150), random(150, 255), 150),
+    color: color(random(100, 200), random(25, 100), random(5, 50), 150),
     move: function() {
         var direction = random(0, 100);
         if (direction < 20) {
